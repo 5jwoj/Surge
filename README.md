@@ -31,6 +31,9 @@ https://raw.githubusercontent.com/5jwoj/Surge/main/ippure/ippure.sgmodule
 
 检测Gemini策略组中哪些节点可以访问Gemini API，并按延时排序显示结果。
 
+#### 📌 两个版本可选：
+
+##### 原版 (简化版)
 **功能特点**：
 - ✅ 自动节点发现
 - ✅ Gemini API连通性测试
@@ -44,6 +47,18 @@ https://raw.githubusercontent.com/5jwoj/Surge/main/gemini-checker/gemini_checker
 ```
 
 **详细文档**：[Gemini Checker README](./gemini-checker/README.md)
+
+##### V2 版本 (完整版 - 多平台)
+**功能特点**：
+- ✅ 单节点检测 + 批量检测
+- ✅ 自动切换到最优节点
+- ✅ 可用节点历史记录
+- ⚡ 快速检测模式
+- 📱 支持 Surge / Quan X / Loon / Shortcuts
+
+**详细文档**：[Gemini Checker V2 README](./gemini-checker-v2/README.md)
+
+**版本对比**：[版本说明](./gemini-checker-v2/VERSION_INFO.md)
 
 ---
 
@@ -73,11 +88,21 @@ Surge/
 │   ├── ippure_panel.js
 │   ├── README.md
 │   └── TROUBLESHOOTING.md
-└── gemini-checker/          # Gemini节点检测模块
-    ├── gemini_checker.sgmodule
-    ├── gemini_checker.js
+├── gemini-checker/          # Gemini节点检测模块 (原版)
+│   ├── gemini_checker.sgmodule
+│   ├── gemini_checker.js
+│   ├── README.md
+│   └── USAGE.md
+└── gemini-checker-v2/       # Gemini节点检测模块 (V2 完整版)
+    ├── gemini-checker.js
+    ├── gemini-quick-check.js
     ├── README.md
-    └── USAGE.md
+    ├── CHANGELOG.md
+    ├── VERSION_INFO.md
+    ├── Surge/               # Surge 配置
+    ├── QuantumultX/         # Quan X 配置
+    ├── Loon/                # Loon 配置
+    └── Shortcuts/           # iOS 快捷指令
 ```
 
 ## 🔧 要求
