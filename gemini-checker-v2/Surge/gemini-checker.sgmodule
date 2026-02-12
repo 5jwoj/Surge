@@ -3,7 +3,7 @@
 #!author=5jwoj
 #!homepage=https://github.com/5jwoj
 #!icon=https://www.gstatic.com/lamda/images/gemini_sparkle_v002_d4735304ff6292a690345.svg
-#!version=1.0.0
+#!version=1.0.2
 #!category=Tool
 
 [Panel]
@@ -12,10 +12,10 @@ gemini-checker = script-name=gemini-checker-current, title="Gemini 检测器", c
 
 [Script]
 # 检测当前节点
-gemini-checker-current = type=generic, timeout=30, script-path=https://raw.githubusercontent.com/5jwoj/BeRich/main/gemini-checker.js, argument=current
+gemini-checker-current = type=generic, timeout=30, script-path=https://raw.githubusercontent.com/5jwoj/Surge/main/gemini-checker-v2/gemini-checker.js, argument=current
 
 # 批量检测所有节点（通过快捷指令或其他方式触发）
-gemini-checker-all = type=generic, timeout=120, script-path=https://raw.githubusercontent.com/5jwoj/BeRich/main/gemini-checker.js, argument=all
+gemini-checker-all = type=generic, timeout=120, script-path=https://raw.githubusercontent.com/5jwoj/Surge/main/gemini-checker-v2/gemini-checker.js, argument=all
 
 [MITM]
 # 不需要 MITM

@@ -1,7 +1,7 @@
 /**
  * Gemini 快速检测 - 轻量版
  * 
- * @version 1.0.1
+ * @version 1.0.2
  * @description 快速检测当前节点是否可访问 Gemini（轻量版）
  * 
  * 使用场景：

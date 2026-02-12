@@ -1,7 +1,7 @@
 #!name = Gemini 节点检测器
 #!desc = 检测代理节点是否能正常访问 Gemini AI
 #!author = 5jwoj
-#!homepage = https://github.com/5jwoj/BeRich
+#!homepage = https://github.com/5jwoj/Surge
 #!icon = https://www.gstatic.com/lamda/images/gemini_sparkle_v002_d4735304ff6292a690345.svg
 #!openUrl = 
 #!tag = Tool
@@ -12,12 +12,12 @@
 
 [Script]
 # 检测当前节点
-cron "0 9 * * *" script-path=https://raw.githubusercontent.com/5jwoj/BeRich/main/gemini-checker.js, timeout=30, tag=Gemini节点检测, enabled=false, argument=current
+cron "0 9 * * *" script-path=https://raw.githubusercontent.com/5jwoj/Surge/main/gemini-checker-v2/gemini-checker.js, timeout=30, tag=Gemini节点检测, enabled=false, argument=current
 
 # 手动触发检测
-http-request ^https?:\/\/gemini-check\.local\/current script-path=https://raw.githubusercontent.com/5jwoj/BeRich/main/gemini-checker.js, timeout=30, tag=Gemini当前节点检测, argument=current
+http-request ^https?:\/\/gemini-check\.local\/current script-path=https://raw.githubusercontent.com/5jwoj/Surge/main/gemini-checker-v2/gemini-checker.js, timeout=30, tag=Gemini当前节点检测, argument=current
 
-http-request ^https?:\/\/gemini-check\.local\/all script-path=https://raw.githubusercontent.com/5jwoj/BeRich/main/gemini-checker.js, timeout=120, tag=Gemini批量检测, argument=all
+http-request ^https?:\/\/gemini-check\.local\/all script-path=https://raw.githubusercontent.com/5jwoj/Surge/main/gemini-checker-v2/gemini-checker.js, timeout=120, tag=Gemini批量检测, argument=all
 
 [Mitm]
 # 不需要 MITM

@@ -2,7 +2,7 @@
 
 > 快速检测代理节点是否能正常访问 Google Gemini AI，避免"地区未开通"和"网络异常"问题
 
-![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.2-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-Surge%20%7C%20QuantumultX-orange.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
@@ -39,7 +39,7 @@
 2. 进入 `模块` → `安装新模块`
 3. 粘贴以下 URL：
    ```
-   https://raw.githubusercontent.com/5jwoj/BeRich/main/Surge/gemini-checker.sgmodule
+   https://raw.githubusercontent.com/5jwoj/Surge/main/gemini-checker-v2/Surge/gemini-checker.sgmodule
    ```
 4. 点击确定安装
 
@@ -54,14 +54,14 @@
 1. 打开 Quan X 配置文件
 2. 在 `[rewrite_remote]` 部分添加：
    ```
-   https://raw.githubusercontent.com/5jwoj/BeRich/main/QuantumultX/gemini-checker.conf, tag=Gemini检测器, update-interval=86400, opt-parser=false, enabled=true
+   https://raw.githubusercontent.com/5jwoj/Surge/main/gemini-checker-v2/QuantumultX/gemini-checker.conf, tag=Gemini检测器, update-interval=86400, opt-parser=false, enabled=true
    ```
 3. 重新载入配置
 
 #### 方法二：添加定时任务
 1. 在 `[task_local]` 部分添加：
    ```
-   0 9 * * * https://raw.githubusercontent.com/5jwoj/BeRich/main/gemini-checker.js, tag=Gemini节点检测, enabled=true
+   0 9 * * * https://raw.githubusercontent.com/5jwoj/Surge/main/gemini-checker-v2/gemini-checker.js, tag=Gemini节点检测, enabled=true
    ```
 2. 重新载入配置
 
@@ -262,7 +262,7 @@ $httpClient.get("http://gemini-check.local/current", (error, response, data) => 
 ## 💬 联系方式
 
 - GitHub: [@5jwoj](https://github.com/5jwoj)
-- Issues: [提交问题](https://github.com/5jwoj/BeRich/issues)
+- Issues: [提交问题](https://github.com/5jwoj/Surge/issues)
 
 ## 🌟 致谢
 

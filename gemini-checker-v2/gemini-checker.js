@@ -2,7 +2,7 @@
  * Gemini 节点可用性检测工具
  * 
  * @author 5jwoj
- * @version 1.0.1
+ * @version 1.0.2
  * @description 检测代理节点是否能正常访问 Gemini AI
  * 
  * 使用方法:
@@ -17,7 +17,7 @@
  */
 
 const SCRIPT_NAME = "Gemini 检测器";
-const VERSION = "1.0.1";
+const VERSION = "1.0.2";
 
 // Gemini API 测试端点
 const GEMINI_TEST_URLS = [
