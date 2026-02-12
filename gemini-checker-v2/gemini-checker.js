@@ -2,7 +2,7 @@
  * Gemini 节点可用性检测工具
  * 
  * @author 5jwoj
- * @version 1.0.2
+ * @version 1.0.3
  * @description 检测代理节点是否能正常访问 Gemini AI
  * 
  * 使用方法:
@@ -17,7 +17,7 @@
  */
 
 const SCRIPT_NAME = "Gemini 检测器";
-const VERSION = "1.0.2";
+const VERSION = "1.0.3";
 
 // Gemini API 测试端点
 const GEMINI_TEST_URLS = [
@@ -109,7 +109,7 @@ async function checkAllNodes() {
 
         // 切换到该节点
         await setPolicy(policyGroup, node);
-        await sleep(1000);  // 等待切换生效
+        await sleep(2000);  // 等待切换生效，增加延迟避免频繁请求
 
         // 测试访问
         const result = await testGeminiAccess();
@@ -127,6 +127,11 @@ async function checkAllNodes() {
                 error: result.error
             });
             console.log(`[${SCRIPT_NAME}] ❌ ${node} - ${result.error}`);
+        }
+
+        // 每次检测后等待 2-3 秒，避免触发 Google 速率限制
+        if (i < nodes.length - 1) {
+            await sleep(2000 + Math.random() * 1000);
         }
     }
 
@@ -153,22 +158,38 @@ async function testGeminiAccess() {
                 method: "GET",
                 timeout: CONFIG.timeout,
                 headers: {
-                    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+                    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+                    "Accept-Language": "en-US,en;q=0.9",
+                    "Accept-Encoding": "gzip, deflate, br",
+                    "Cache-Control": "no-cache",
+                    "Pragma": "no-cache",
+                    "Sec-Fetch-Dest": "document",
+                    "Sec-Fetch-Mode": "navigate",
+                    "Sec-Fetch-Site": "none",
+                    "Sec-Fetch-User": "?1",
+                    "Upgrade-Insecure-Requests": "1",
+                    "sec-ch-ua": "\"Google Chrome\";v=\"131\", \"Chromium\";v=\"131\", \"Not_A Brand\";v=\"24\"",
+                    "sec-ch-ua-mobile": "?0",
+                    "sec-ch-ua-platform": "\"macOS\""
                 }
             });
 
             const latency = Date.now() - startTime;
+            const body = response.body || "";
 
-            // 检查响应状态
-            if (response.status >= 200 && response.status < 500) {
-                // 200-499 都认为是可访问（包括 403/404 等，说明至少能连上）
-                // 如果是地区限制，通常会返回特定错误页面
+            console.log(`[${SCRIPT_NAME}] 端点 ${url} 响应: 状态码=${response.status}, 延迟=${latency}ms`);
 
-                // 检查是否有地区限制标志
-                const body = response.body || "";
+            // 修正判断逻辑：只有 2xx 和部分 3xx 才算成功
+            if (response.status >= 200 && response.status < 400) {
+                // 检查是否有地区限制或异常流量提示
                 if (body.includes("not available in your country") ||
                     body.includes("不在受支持的国家/地区") ||
-                    body.includes("This service is not available")) {
+                    body.includes("This service is not available") ||
+                    body.includes("异常流量") ||
+                    body.includes("unusual traffic") ||
+                    body.includes("automated requests")) {
+                    console.log(`[${SCRIPT_NAME}] 端点 ${url} 检测到地区限制或异常流量`);
                     continue;  // 尝试下一个端点
                 }
 
@@ -179,6 +200,19 @@ async function testGeminiAccess() {
                     status: response.status
                 };
             }
+            // 403/429 等错误码说明节点不可用
+            else if (response.status === 403) {
+                console.log(`[${SCRIPT_NAME}] 端点 ${url} 返回 403 - 检测到异常流量或IP被封禁`);
+                continue;
+            }
+            else if (response.status === 429) {
+                console.log(`[${SCRIPT_NAME}] 端点 ${url} 返回 429 - 请求过于频繁`);
+                continue;
+            }
+            else {
+                console.log(`[${SCRIPT_NAME}] 端点 ${url} 返回错误状态码: ${response.status}`);
+                continue;
+            }
         } catch (error) {
             console.log(`[${SCRIPT_NAME}] 端点 ${url} 测试失败: ${error.message}`);
             // 继续尝试下一个端点
@@ -188,7 +222,7 @@ async function testGeminiAccess() {
     // 所有端点都失败
     return {
         success: false,
-        error: "无法访问 Gemini（地区限制或网络异常）"
+        error: "无法访问 Gemini（IP被封禁/地区限制/异常流量检测）"
     };
 }
 
