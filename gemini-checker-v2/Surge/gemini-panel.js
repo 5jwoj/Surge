@@ -2,8 +2,8 @@
  * Gemini 节点检测 - Surge 面板版
  * 
  * @author 5jwoj
- * @version 1.0.5
- * @description Surge 面板专用的 Gemini 节点检测脚本（修复版）
+ * @version 1.0.6
+ * @description Surge 面板专用的 Gemini 节点检测脚本（显示节点信息）
  */
 
 const SCRIPT_NAME = "Gemini检测";
@@ -12,6 +12,18 @@ const TIMEOUT = 10; // 秒
 
 console.log(`[${SCRIPT_NAME}] 开始检测...`);
 console.log(`[${SCRIPT_NAME}] 测试URL: ${TEST_URL}`);
+
+// 获取当前出站信息
+let outboundInfo = "";
+try {
+    if (typeof $surge !== "undefined") {
+        const outbound = $surge.outbound || "未知";
+        outboundInfo = `\n出站: ${outbound}`;
+        console.log(`[${SCRIPT_NAME}] 当前出站: ${outbound}`);
+    }
+} catch (e) {
+    console.log(`[${SCRIPT_NAME}] 无法获取出站信息: ${e}`);
+}
 
 const startTime = Date.now();
 
@@ -49,7 +61,7 @@ $httpClient.get({
 
         $done({
             title: "❌ Gemini 不可访问",
-            content: `${errorMsg}\n${errorDetail}\n请切换其他节点`,
+            content: `${errorMsg}\n${errorDetail}${outboundInfo}\n请切换其他节点`,
             icon: "xmark.circle.fill",
             "icon-color": "#FF3B30"
         });
@@ -68,7 +80,7 @@ $httpClient.get({
 
             $done({
                 title: "✅ Gemini 可访问",
-                content: `延迟: ${latency}ms\n状态: ${status} (${statusText})`,
+                content: `延迟: ${latency}ms\n状态: ${status} (${statusText})${outboundInfo}`,
                 icon: "checkmark.circle.fill",
                 "icon-color": "#34C759"
             });
@@ -79,7 +91,7 @@ $httpClient.get({
 
             $done({
                 title: "⚠️ 服务器错误",
-                content: `状态码: ${status}\n延迟: ${latency}ms\nGoogle服务异常`,
+                content: `状态码: ${status}\n延迟: ${latency}ms${outboundInfo}\nGoogle服务异常`,
                 icon: "exclamationmark.triangle.fill",
                 "icon-color": "#FF9500"
             });
@@ -90,7 +102,7 @@ $httpClient.get({
 
             $done({
                 title: "⚠️ 响应异常",
-                content: `状态码: ${status}\n延迟: ${latency}ms\n可能存在地区限制`,
+                content: `状态码: ${status}\n延迟: ${latency}ms${outboundInfo}\n可能存在地区限制`,
                 icon: "exclamationmark.triangle.fill",
                 "icon-color": "#FF9500"
             });
