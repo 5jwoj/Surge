@@ -2,7 +2,7 @@
 
 > 快速检测代理节点是否能正常访问 Google Gemini AI，避免"地区未开通"和"网络异常"问题
 
-![Version](https://img.shields.io/badge/version-1.0.2-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.3-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-Surge%20%7C%20QuantumultX-orange.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 

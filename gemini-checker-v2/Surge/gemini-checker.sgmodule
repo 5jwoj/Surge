@@ -3,16 +3,16 @@
 #!author=5jwoj
 #!homepage=https://github.com/5jwoj
 #!icon=https://www.gstatic.com/lamda/images/gemini_sparkle_v002_d4735304ff6292a690345.svg
-#!version=1.0.2
+#!version=1.0.3
 #!category=Tool
 
 [Panel]
 # 面板 - 点击检测当前节点
-gemini-checker = script-name=gemini-checker-current, title="Gemini 检测器", content="点击检测当前节点", update-interval=-1
+gemini-checker = script-name=gemini-panel, title="Gemini 检测器", content="点击检测当前节点", update-interval=-1
 
 [Script]
-# 检测当前节点
-gemini-checker-current = type=generic, timeout=30, script-path=https://raw.githubusercontent.com/5jwoj/Surge/main/gemini-checker-v2/gemini-checker.js, argument=current
+# 面板检测脚本
+gemini-panel = type=generic, timeout=10, script-path=https://raw.githubusercontent.com/5jwoj/Surge/main/gemini-checker-v2/Surge/gemini-panel.js
 
 # 批量检测所有节点（通过快捷指令或其他方式触发）
 gemini-checker-all = type=generic, timeout=120, script-path=https://raw.githubusercontent.com/5jwoj/Surge/main/gemini-checker-v2/gemini-checker.js, argument=all
