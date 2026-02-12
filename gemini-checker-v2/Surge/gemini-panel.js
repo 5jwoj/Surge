@@ -2,62 +2,31 @@
  * Gemini 节点检测 - Surge 面板版
  * 
  * @author 5jwoj
- * @version 1.0.3
- * @description Surge 面板专用的 Gemini 节点检测脚本
+ * @version 1.0.5
+ * @description Surge 面板专用的 Gemini 节点检测脚本（修复版）
  */
 
-!(async () => {
-    const SCRIPT_NAME = "Gemini检测";
-    const TEST_URL = "https://generativelanguage.googleapis.com/v1/models";
-    const TIMEOUT = 5; // 秒
+const SCRIPT_NAME = "Gemini检测";
+const TEST_URL = "https://generativelanguage.googleapis.com/v1/models";
+const TIMEOUT = 10; // 秒
 
-    let startTime; // Declare startTime outside try-catch for catch block access
+console.log(`[${SCRIPT_NAME}] 开始检测...`);
+console.log(`[${SCRIPT_NAME}] 测试URL: ${TEST_URL}`);
 
-    try {
-        console.log(`[${SCRIPT_NAME}] 开始检测...`);
-        console.log(`[${SCRIPT_NAME}] 测试URL: ${TEST_URL}`);
-        console.log(`[${SCRIPT_NAME}] 超时设置: ${TIMEOUT}秒`);
+const startTime = Date.now();
 
-        startTime = Date.now();
+// Surge 使用回调函数方式，不是 Promise
+$httpClient.get({
+    url: TEST_URL,
+    timeout: TIMEOUT,
+    headers: {
+        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15"
+    }
+}, function (error, response, data) {
+    const latency = Date.now() - startTime;
 
-        // 发起请求
-        const response = await $httpClient.get({
-            url: TEST_URL,
-            timeout: TIMEOUT,
-            headers: {
-                "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15"
-            }
-        });
-
-        const latency = Date.now() - startTime;
-        console.log(`[${SCRIPT_NAME}] 响应状态: ${response.status}, 延迟: ${latency}ms`);
-        console.log(`[${SCRIPT_NAME}] 响应头: ${JSON.stringify(response.headers)}`);
-
-        // 检查响应状态
-        if (response.status === 200 || response.status === 403) {
-            // 200 = 成功, 403 = API需要密钥但网络可达
-            console.log(`[${SCRIPT_NAME}] ✅ 检测成功`);
-            $done({
-                title: "✅ Gemini 可访问",
-                content: `延迟: ${latency}ms\n状态: ${response.status}`,
-                icon: "checkmark.circle.fill",
-                "icon-color": "#34C759"
-            });
-        } else {
-            console.log(`[${SCRIPT_NAME}] ⚠️ 响应状态异常`);
-            $done({
-                title: "⚠️ 响应异常",
-                content: `状态码: ${response.status}\n延迟: ${latency}ms`,
-                icon: "exclamationmark.triangle.fill",
-                "icon-color": "#FF9500"
-            });
-        }
-
-    } catch (error) {
-        const latency = startTime ? Date.now() - startTime : 'N/A'; // Calculate latency if startTime is set
-        console.log(`[${SCRIPT_NAME}] ❌ 错误: ${error}`);
-        console.log(`[${SCRIPT_NAME}] 错误类型: ${typeof error}`);
-        console.log(`[${SCRIPT_NAME}] 错误详情: ${JSON.stringify(error)}`);
+    if (error) {
+        console.log(`[${SCRIPT_NAME}] ❌ 请求错误: ${error}`);
 
         // 判断错误类型
         let errorMsg = "网络错误";
@@ -74,11 +43,8 @@
         } else if (errorStr.includes("dns") || errorStr.includes("resolve")) {
             errorMsg = "DNS解析失败";
             errorDetail = "无法解析域名";
-        } else if (errorStr.includes("ssl") || errorStr.includes("certificate")) {
-            errorMsg = "SSL证书错误";
-            errorDetail = "证书验证失败";
         } else {
-            errorDetail = error.message || error.toString().substring(0, 30);
+            errorDetail = error.substring(0, 30);
         }
 
         $done({
@@ -87,5 +53,47 @@
             icon: "xmark.circle.fill",
             "icon-color": "#FF3B30"
         });
+
+    } else {
+        const status = response.status || response.statusCode;
+        console.log(`[${SCRIPT_NAME}] ✅ 响应状态: ${status}, 延迟: ${latency}ms`);
+
+        // 检查响应状态
+        if (status === 200 || status === 403) {
+            // 200 = 成功访问
+            // 403 = API需要密钥，但网络可达（说明节点支持Gemini）
+            const statusText = status === 200 ? "API正常" : "网络可达";
+
+            console.log(`[${SCRIPT_NAME}] ✅ 检测成功 - ${statusText}`);
+
+            $done({
+                title: "✅ Gemini 可访问",
+                content: `延迟: ${latency}ms\n状态: ${status} (${statusText})`,
+                icon: "checkmark.circle.fill",
+                "icon-color": "#34C759"
+            });
+
+        } else if (status >= 500) {
+            // 服务器错误
+            console.log(`[${SCRIPT_NAME}] ⚠️ 服务器错误`);
+
+            $done({
+                title: "⚠️ 服务器错误",
+                content: `状态码: ${status}\n延迟: ${latency}ms\nGoogle服务异常`,
+                icon: "exclamationmark.triangle.fill",
+                "icon-color": "#FF9500"
+            });
+
+        } else {
+            // 其他状态码
+            console.log(`[${SCRIPT_NAME}] ⚠️ 响应异常`);
+
+            $done({
+                title: "⚠️ 响应异常",
+                content: `状态码: ${status}\n延迟: ${latency}ms\n可能存在地区限制`,
+                icon: "exclamationmark.triangle.fill",
+                "icon-color": "#FF9500"
+            });
+        }
     }
-})();
+});
