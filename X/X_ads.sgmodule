@@ -1,0 +1,14 @@
+#!name = X(Twitter)网页版去广告
+#!desc = 移除网页版 X (Twitter) 广告，包括信息流推荐广告与推文评论区推广内容。
+#!category = 去广告
+#!author = fmz200 & 5jwoj
+#!version = 1.0.0
+#!homepage = https://github.com/5jwoj/Surge/tree/main/X
+#!icon = https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/X.png
+#!date = 2026-08-21
+
+[Script]
+X网页版去广告 = type=http-response, pattern=^https?:\/\/x\.com\/i\/api\/graphql\/[^\/]+\/(HomeTimeline|HomeLatestTimeline|TweetDetail), script-path=https://raw.githubusercontent.com/5jwoj/Surge/main/X/X_ads.js, requires-body=true, timeout=10
+
+[MITM]
+hostname = %APPEND% x.com

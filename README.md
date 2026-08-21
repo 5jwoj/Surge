@@ -62,6 +62,29 @@ https://raw.githubusercontent.com/5jwoj/Surge/main/gemini-checker/gemini_checker
 
 ---
 
+### 3️⃣ X (Twitter) 网页版去广告
+
+移除网页版 X (Twitter) 广告，包括时间线推荐信息流广告、正在关注页面广告以及推文详情评论区的推广内容。
+
+**功能特点**：
+- 🎯 HomeTimeline / HomeLatestTimeline 信息流广告过滤
+- 💬 TweetDetail 推文详情与评论区推广过滤
+- 📱 支持 **Loon 插件** 与 **Surge 模块**
+
+**Loon 插件安装地址**：
+```
+https://raw.githubusercontent.com/5jwoj/Surge/main/X/X_ads.plugin
+```
+
+**Surge 模块安装地址**：
+```
+https://raw.githubusercontent.com/5jwoj/Surge/main/X/X_ads.sgmodule
+```
+
+**详细文档**：[X Ads README](./X/README.md)
+
+---
+
 ## 🚀 快速开始
 
 ### 安装方法
@@ -83,6 +106,11 @@ https://raw.githubusercontent.com/5jwoj/Surge/main/gemini-checker/gemini_checker
 ```
 Surge/
 ├── README.md                # 本文件
+├── X/                       # X (Twitter) 网页版去广告
+│   ├── X_ads.js             # 广告过滤脚本 (v1.0.0)
+│   ├── X_ads.plugin         # Loon 插件
+│   ├── X_ads.sgmodule       # Surge 模块
+│   └── README.md
 ├── ippure/                  # IP纯净度检测模块
 │   ├── ippure.sgmodule
 │   ├── ippure_panel.js
